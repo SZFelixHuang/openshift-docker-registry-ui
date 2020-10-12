@@ -1,0 +1,20 @@
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  annotations:
+    openshift.io/display-name: docker-registry-ui
+  generation: 2
+  name: docker-registry-ui
+  namespace: devops
+spec:
+  lookupPolicy:
+    local: false
+  dockerImageRepository: 'docker-registry.felix.com:5000/devops/docker-registry-ui'
+  tags:
+    - from:
+        kind: DockerImage
+        name: 'docker-registry.felix.com:5000/devops/docker-registry-ui:latest'
+      generation: 2
+      name: 'latest'
+      referencePolicy:
+        type: Local

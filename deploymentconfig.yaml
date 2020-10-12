@@ -1,0 +1,40 @@
+kind: DeploymentConfig
+apiVersion: v1
+metadata:
+  name: docker-registry-ui
+  namespace: devops
+spec:
+  template: 
+    metadata:
+      labels:
+        name: docker-registry-ui
+    spec:
+      containers:
+        - env:
+            - name: REGISTRY_URL
+              value: 'http://docker-registry.felix.com:5000'
+            - name: URL
+              value: 'http://docker-registry.felix.com:5000'
+            - name: DELETE_IMAGES
+              value: 'true'
+        - name: docker-registry-ui
+          image: docker-registry-ui
+          ports:
+            - containerPort: 80
+              protocol: TCP
+  replicas: 1
+  triggers:
+    - type: ConfigChange 
+    - type: ImageChange
+      imageChangeParams:
+        automatic: true
+        containerNames:
+          - docker-registry-ui
+        from:
+          kind: ImageStreamTag
+          name: docker-registry-ui:latest
+  strategy: 
+    type: Rolling
+  paused: false 
+  revisionHistoryLimit: 2 
+  minReadySeconds: 0 
